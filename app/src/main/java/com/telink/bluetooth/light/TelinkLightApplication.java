@@ -34,7 +34,10 @@ import com.telink.bluetooth.light.util.ToastUtils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
+/**
+ * 测试
+ * @author zhuj 2019-12-17 22:28
+ */
 public final class TelinkLightApplication extends TelinkApplication {
 
     private Mesh mesh;
