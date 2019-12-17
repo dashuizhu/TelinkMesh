@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.telink.bluetooth.light">
-
     <!-- 蓝牙权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -9,12 +9,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--震动-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--mesh ota 悬浮窗-->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- mesh ota 悬浮窗 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -25,18 +24,21 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.ConfigActivity"></activity>
+
         <service
             android:name=".TelinkLightService"
             android:enabled="true" />
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,23 +72,23 @@
         <activity
             android:name=".activity.LogInfoActivity"
             android:screenOrientation="portrait" />
-        <!-- <activity
+        <!--
+ <activity
              android:name=".activity.OTAPrepareActivity"
-             android:screenOrientation="portrait" />-->
+             android:screenOrientation="portrait" />
+        -->
         <activity
             android:name=".activity.FileSelectActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UserAllActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.OnlineStatusTestActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ModelTestSettingActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-
         <activity
             android:name=".activity.DeviceMeshScanningActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />

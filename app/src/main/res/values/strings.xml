@@ -111,4 +111,7 @@
 
 
     <string name="mesh_ota_state">State: %s</string>
+    <string name="label_about">简介</string>
+    <string name="label_help">帮助</string>
+    <string name="label_confirm">确认</string>
 </resources>

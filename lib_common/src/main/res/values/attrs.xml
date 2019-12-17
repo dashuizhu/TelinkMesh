@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 标题栏 -->
+    <declare-styleable name="HeaderView">
+        <attr format="string" name="titleText" />
+        <attr format="string" name="rightText" />
+        <attr format="string" name="leftText" />
+        <attr format="reference" name="titleIcon" />
+        <attr format="reference" name="rightIcon" />
+        <attr format="reference" name="leftIcon" />
+        <attr format="color" name="headerColor" />
+        <attr format="boolean" name="showRight" />
+        <attr format="boolean" name="showBack" />
+        <attr format="boolean" name="showDivide" />
+    </declare-styleable>
+
+</resources>
