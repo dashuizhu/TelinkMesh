@@ -27,12 +27,15 @@ import android.widget.Toast;
 import com.telink.TelinkApplication;
 import com.telink.bluetooth.TelinkLog;
 import com.telink.bluetooth.light.activity.TempTestActivity;
+import com.telink.bluetooth.light.database.MyRealm;
 import com.telink.bluetooth.light.model.*;
 import com.telink.bluetooth.light.util.FileSystem;
 import com.telink.bluetooth.light.util.ToastUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import io.realm.Realm;
 
 /**
  * 测试
@@ -64,7 +67,8 @@ public final class TelinkLightApplication extends TelinkApplication {
         logInfo = new StringBuilder("log:");
         thiz = this;
 //        AdvanceStrategy.setDefault(new MySampleAdvanceStrategy());
-
+        Realm.init(this);
+        MyRealm.setDefaultRealmForUser("light");
 
     }
 
