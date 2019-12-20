@@ -16,6 +16,7 @@ import butterknife.OnClick;
 public class HomeActivity extends TelinkMeshErrorDealActivity {
 
     public final int REQUEST_CONFIG = 11;
+    public final int REQUEST_DEVICE_LIST = 12;
 
     @BindView(R.id.headerView)  HeaderView mHeaderView;
     @BindView(R.id.btn_add)     Button     mBtnAdd;
@@ -45,6 +46,7 @@ public class HomeActivity extends TelinkMeshErrorDealActivity {
                 startActivityForResult(new Intent(this, ConfigActivity.class), REQUEST_CONFIG);
                 break;
             case R.id.btn_devices:
+                startActivityForResult(new Intent(this, DeviceListActivity.class), REQUEST_CONFIG);
                 break;
             case R.id.layout_header_back:
                 break;

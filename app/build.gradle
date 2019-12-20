@@ -4,10 +4,21 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
+    signingConfigs {
+        signing {
+            keyAlias 'buddy'
+            keyPassword 'person2017'
+            storeFile file('person.jks')
+            storePassword 'person2017'
+        }
+    }
+
+
     defaultConfig {
-        applicationId "com.telink.bluetooth.light"
+        applicationId "com.telink.ble.light"
         minSdkVersion 18
         targetSdkVersion 28
+        signingConfig signingConfigs.signing
         versionCode 5
         versionName "2.4"
         javaCompileOptions {
@@ -19,7 +30,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.signing
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.signing
         }
     }
     compileOptions {
