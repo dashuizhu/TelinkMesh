@@ -23,9 +23,9 @@ package com.telink.bluetooth.light.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -84,11 +84,11 @@ public final class MainActivity extends TelinkMeshErrorDealActivity implements E
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
-    private static final int UPDATE_LIST = 0;
-    private FragmentManager fragmentManager;
-    private DeviceListFragment deviceFragment;
-    private GroupListFragment groupFragment;
-    private MainTestFragment mainTestFragment;
+    private static final int                UPDATE_LIST = 0;
+    private              FragmentManager    fragmentManager;
+    private              DeviceListFragment deviceFragment;
+    private              GroupListFragment  groupFragment;
+    private              MainTestFragment   mainTestFragment;
 
     private Fragment mContent;
 
@@ -160,7 +160,7 @@ public final class MainActivity extends TelinkMeshErrorDealActivity implements E
 
         this.mApplication = (TelinkLightApplication) this.getApplication();
 
-        this.fragmentManager = this.getFragmentManager();
+        this.fragmentManager = getSupportFragmentManager();
 
         this.deviceFragment = (DeviceListFragment) FragmentFactory
                 .createFragment(R.id.tab_devices);

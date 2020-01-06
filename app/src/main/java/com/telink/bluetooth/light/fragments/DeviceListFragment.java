@@ -106,7 +106,7 @@ public final class DeviceListFragment extends Fragment implements OnClickListene
         GridView listView = (GridView) view.findViewById(R.id.list_devices);
 
         listView.setOnItemClickListener(this.itemClickListener);
-        listView.setOnItemLongClickListener(this.itemLongClickListener);
+        //listView.setOnItemLongClickListener(this.itemLongClickListener);
         listView.setAdapter(this.adapter);
 
         this.backView = (Button) view.findViewById(R.id.img_header_menu_left);
@@ -220,21 +220,21 @@ public final class DeviceListFragment extends Fragment implements OnClickListene
         }
     };
 
-    private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                       int position, long id) {
-
-            Intent intent = new Intent(getActivity(),
-                    DeviceSettingActivity.class);
-            Light light = adapter.getItem(position);
-
-            intent.putExtra("meshAddress", light.meshAddress);
-            startActivity(intent);
-            return true;
-        }
-    };
+    //private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
+    //
+    //    @Override
+    //    public boolean onItemLongClick(AdapterView<?> parent, View view,
+    //                                   int position, long id) {
+    //
+    //        Intent intent = new Intent(getActivity(),
+    //                DeviceSettingActivity.class);
+    //        Light light = adapter.getItem(position);
+    //
+    //        intent.putExtra("meshAddress", light.meshAddress);
+    //        startActivity(intent);
+    //        return true;
+    //    }
+    //};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

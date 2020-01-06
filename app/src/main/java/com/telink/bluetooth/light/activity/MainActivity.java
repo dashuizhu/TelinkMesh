@@ -95,20 +95,20 @@ public final class MainActivity extends TelinkMeshErrorDealActivity implements E
 
     private TelinkLightApplication mApplication;
 
-    private OnCheckedChangeListener checkedChangeListener = new OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-            if (checkedId == R.id.tab_devices) {
-                switchContent(mContent, deviceFragment);
-            } else if (checkedId == R.id.tab_groups) {
-                switchContent(mContent, groupFragment);
-            } else if (checkedId == R.id.tab_test) {
-                switchContent(mContent, mainTestFragment);
-            }
-        }
-    };
+    //private OnCheckedChangeListener checkedChangeListener = new OnCheckedChangeListener() {
+    //
+    //    @Override
+    //    public void onCheckedChanged(RadioGroup group, int checkedId) {
+    //
+    //        if (checkedId == R.id.tab_devices) {
+    //            switchContent(mContent, deviceFragment);
+    //        } else if (checkedId == R.id.tab_groups) {
+    //            switchContent(mContent, groupFragment);
+    //        } else if (checkedId == R.id.tab_test) {
+    //            switchContent(mContent, mainTestFragment);
+    //        }
+    //    }
+    //};
 
     private int     connectMeshAddress;
     private Handler mHandler = new Handler() {
@@ -161,14 +161,14 @@ public final class MainActivity extends TelinkMeshErrorDealActivity implements E
 
         this.fragmentManager = this.getSupportFragmentManager();
 
-        this.deviceFragment = (DeviceListFragment) FragmentFactory
-                .createFragment(R.id.tab_devices);
-        this.groupFragment = (GroupListFragment) FragmentFactory
-                .createFragment(R.id.tab_groups);
-        this.mainTestFragment = (MainTestFragment) FragmentFactory
-                .createFragment(R.id.tab_test);
-        this.tabs = (RadioGroup) this.findViewById(R.id.tabs);
-        this.tabs.setOnCheckedChangeListener(this.checkedChangeListener);
+        //this.deviceFragment = (DeviceListFragment) FragmentFactory
+        //        .createFragment(R.id.tab_devices);
+        //this.groupFragment = (GroupListFragment) FragmentFactory
+        //        .createFragment(R.id.tab_groups);
+        //this.mainTestFragment = (MainTestFragment) FragmentFactory
+        //        .createFragment(R.id.tab_test);
+        //this.tabs = (RadioGroup) this.findViewById(R.id.tabs);
+        //this.tabs.setOnCheckedChangeListener(this.checkedChangeListener);
 
         if (savedInstanceState == null) {
 

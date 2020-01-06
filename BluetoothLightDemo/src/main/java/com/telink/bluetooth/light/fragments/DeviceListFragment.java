@@ -22,12 +22,12 @@
 package com.telink.bluetooth.light.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +66,7 @@ import com.telink.bluetooth.light.util.MeshCommandUtil;
 import java.util.List;
 
 public final class DeviceListFragment extends Fragment implements OnClickListener {
+
 
     private static final String TAG = DeviceListFragment.class.getSimpleName();
     private static final int UPDATE = 1;

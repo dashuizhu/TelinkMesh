@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "com.telink.ble.light"
+        applicationId "com.telink.bluetooth.light"
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 5
@@ -32,8 +32,9 @@ repositories {
 
 dependencies {
     //compile(name: "libTelinkLight", ext: "aar")
-    implementation 'com.android.support:support-v4:25.3.1'
-    implementation 'com.android.support:recyclerview-v7:25.3.1'
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation project(':BluetoothLightLib')
     implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.google.zxing:android-core:3.2.1'

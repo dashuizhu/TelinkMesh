@@ -83,11 +83,9 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
     private final static String TAG = DeviceListActivity.class.getSimpleName();
 
     private static final int                UPDATE_LIST = 0;
-    private              DeviceListFragment deviceFragment;
 
-    private Fragment mContent;
+    private DeviceListFragment deviceFragment;
 
-    private RadioGroup tabs;
 
     private TelinkLightApplication mApplication;
 
@@ -142,8 +140,7 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
         this.mApplication = (TelinkLightApplication) this.getApplication();
 
 
-        this.deviceFragment = (DeviceListFragment) FragmentFactory
-                .createFragment(R.id.tab_devices);
+        this.deviceFragment = new DeviceListFragment();
 
         if (savedInstanceState == null) {
 
@@ -151,7 +148,6 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
                     .beginTransaction();
             transaction.add(R.id.content, this.deviceFragment).commit();
 
-            this.mContent = this.deviceFragment;
         }
 
         this.mApplication.doInit();

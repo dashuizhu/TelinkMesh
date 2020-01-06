@@ -24,9 +24,10 @@ package com.telink.bluetooth.light;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-public class TelinkBaseActivity extends Activity {
+public class TelinkBaseActivity extends AppCompatActivity {
 
     protected Toast toast;
     protected boolean foreground = false;

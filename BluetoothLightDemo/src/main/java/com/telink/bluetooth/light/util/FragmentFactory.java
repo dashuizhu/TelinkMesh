@@ -21,7 +21,7 @@
  *******************************************************************************************************/
 package com.telink.bluetooth.light.util;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 import com.telink.bluetooth.light.R;
 import com.telink.bluetooth.light.fragments.DeviceListFragment;
