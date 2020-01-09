@@ -1,5 +1,5 @@
 /********************************************************************************************************
- * @file     DeviceListFragment.java 
+ * @file     DeviceListFragment.java
  *
  * @brief    for TLSR chips
  *
@@ -8,7 +8,7 @@
  *
  * @par      Copyright (c) 2010, Telink Semiconductor (Shanghai) Co., Ltd.
  *           All rights reserved.
- *           
+ *
  *			 The information contained herein is confidential and proprietary property of Telink 
  * 		     Semiconductor (Shanghai) Co., Ltd. and is available under the terms 
  *			 of Commercial License Agreement between Telink Semiconductor (Shanghai) 
@@ -17,7 +17,7 @@
  *
  * 			 Licensees are granted free, non-transferable use of the information in this 
  *			 file under Mutual Non-Disclosure Agreement. NO WARRENTY of ANY KIND is provided. 
- *           
+ *
  *******************************************************************************************************/
 package com.telink.bluetooth.light.ui;
 
@@ -54,46 +54,53 @@ import com.telink.bluetooth.light.activity.AddMeshActivity;
 import com.telink.bluetooth.light.activity.DeviceMeshScanningActivity;
 import com.telink.bluetooth.light.activity.DeviceScanningActivity;
 import com.telink.bluetooth.light.activity.DeviceSettingActivity;
+import com.telink.bluetooth.light.activity.GroupSettingActivity;
 import com.telink.bluetooth.light.activity.LogInfoActivity;
 import com.telink.bluetooth.light.activity.OnlineStatusTestActivity;
 import com.telink.bluetooth.light.activity.TempTestActivity;
+import com.telink.bluetooth.light.model.Group;
+import com.telink.bluetooth.light.model.Groups;
 import com.telink.bluetooth.light.model.Light;
 import com.telink.bluetooth.light.model.Lights;
 import com.telink.bluetooth.light.model.Mesh;
 
-public final class GroupListFragment extends Fragment implements OnClickListener {
+public final class GroupListFragment extends Fragment  {
 
-    private static final String TAG = GroupListFragment.class.getSimpleName();
-    private static final int UPDATE = 1;
-    private LayoutInflater inflater;
-    private DeviceListAdapter adapter;
-
-    private Button backView;
-    private ImageView editView;
-    private Button btnAllOn;
-    private Button btnAllOff;
-    private Button btnOta;
+    private LayoutInflater                                                          inflater;
+    private GroupListAdapter adapter;
 
     private Activity mContext;
+    private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
 
-    private EditText txtSendInterval;
-    private EditText txtSendNumbers;
-    private TextView txtNotifyCount;
-    private TextView log;
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                       int position, long id) {
 
-    // interval on off test
-    private EditText et_adr, et_interval;
-    private Button btn_start_test;
-    private Handler mIntervalHandler;
-    private boolean testStarted;
-    private long interval;
-    private int address;
-    private boolean onOff = false;
-    private TextView tv_test_count;
-    private int testCount;
-    private CheckBox cb_scan_mode;
+            Group group = adapter.getItem(position);
 
-    private Button btn_online_status;
+            Intent intent = new Intent(mContext, GroupSettingActivity.class);
+            intent.putExtra("groupAddress", group.meshAddress);
+
+            startActivity(intent);
+
+            return true;
+        }
+    };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        this.mContext = this.getActivity();
+        this.adapter = new GroupListAdapter();
+        this.testData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Groups.getInstance().clear();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,259 +108,102 @@ public final class GroupListFragment extends Fragment implements OnClickListener
 
         this.inflater = inflater;
 
-        View view = inflater.inflate(R.layout.fragment_device_list, null);
+        View view = inflater.inflate(R.layout.fragment_group_list, null);
 
-        GridView listView = (GridView) view.findViewById(R.id.list_devices);
-
-        listView.setOnItemClickListener(this.itemClickListener);
+        GridView listView = (GridView) view.findViewById(R.id.list_groups);
         listView.setOnItemLongClickListener(this.itemLongClickListener);
         listView.setAdapter(this.adapter);
-
-        this.backView = (Button) view.findViewById(R.id.img_header_menu_left);
-        this.backView.setOnClickListener(this);
-
-        this.editView = (ImageView) view
-                .findViewById(R.id.img_header_menu_right);
-        this.editView.setOnClickListener(this);
-
-        this.btnAllOn = (Button) view.findViewById(R.id.btn_on);
-        this.btnAllOn.setOnClickListener(this);
-
-        this.btnAllOff = (Button) view.findViewById(R.id.btn_off);
-        this.btnAllOff.setOnClickListener(this);
-
-        this.btnOta = (Button) view.findViewById(R.id.btn_ota);
-        this.btnOta.setOnClickListener(this);
-
-        this.txtSendInterval = (EditText) view.findViewById(R.id.sendInterval);
-        this.txtSendNumbers = (EditText) view.findViewById(R.id.sendNumbers);
-        this.txtNotifyCount = (TextView) view.findViewById(R.id.notifyCount);
-        this.log = (TextView) view.findViewById(R.id.log);
-        this.log.setOnClickListener(this);
-        view.findViewById(R.id.userAll).setOnClickListener(this);
-
-        et_adr = (EditText) view.findViewById(R.id.et_adr);
-        et_interval = (EditText) view.findViewById(R.id.et_interval);
-        btn_start_test = (Button) view.findViewById(R.id.btn_start_test);
-        btn_start_test.setOnClickListener(this);
-        btn_online_status = (Button) view.findViewById(R.id.online_status);
-        btn_online_status.setOnClickListener(this);
-
-        tv_test_count = (TextView) view.findViewById(R.id.tv_test_count);
-        cb_scan_mode = (CheckBox) view.findViewById(R.id.cb_scan_mode);
 
         return view;
     }
 
-    private void startIntervalTest() {
-        try {
-            interval = Long.parseLong(et_interval.getText().toString().trim());
-            address = Integer.parseInt(et_adr.getText().toString(), 16);
-            testStarted = true;
-            testCount = 0;
-            btn_start_test.setText("stop");
-            tv_test_count.setText(testCount + "");
-            mIntervalHandler.removeCallbacksAndMessages(null);
-            mIntervalHandler.post(intervalTask);
-
-        } catch (Exception e) {
-            Toast.makeText(mContext, "input error", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void stopIntervalTest() {
-        testStarted = false;
-        btn_start_test.setText("start");
-        mIntervalHandler.removeCallbacksAndMessages(null);
-    }
-
-    private Runnable intervalTask = new Runnable() {
-        @Override
-        public void run() {
-            if (!testStarted) return;
-            if (onOff) {
-                byte opcode = (byte) 0xD0;
-//                int address = 0xFFFF;
-                byte[] params = new byte[]{0x01, 0x00, 0x00};
-                TelinkLightService.Instance().sendCommandNoResponse(opcode, address,
-                        params);
-            } else {
-                byte opcode = (byte) 0xD0;
-//                int address = 0xFFFF;
-                byte[] params = new byte[]{0x00, 0x00, 0x00};
-                TelinkLightService.Instance().sendCommandNoResponse(opcode, address,
-                        params);
-            }
-            testCount++;
-            tv_test_count.setText(testCount + "");
-            onOff = !onOff;
-            mIntervalHandler.removeCallbacks(this);
-            mIntervalHandler.postDelayed(this, interval);
-        }
-    };
-
-    private OnItemClickListener itemClickListener = new OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-
-            Light light = adapter.getItem(position);
-
-            if (light.connectionStatus == ConnectionStatus.OFFLINE)
-                return;
-
-            int dstAddr = light.meshAddress;
-
-            byte opcode = (byte) 0xD0;
-
-
-            if (light.connectionStatus == ConnectionStatus.OFF) {
-
-
-                TelinkLightService.Instance().sendCommandNoResponse(opcode, dstAddr, new byte[]{0x01, 0x00, 0x00});
-            } else if (light.connectionStatus == ConnectionStatus.ON) {
-
-
-                TelinkLightService.Instance().sendCommandNoResponse(opcode, dstAddr, new byte[]{0x00, 0x00, 0x00});
-            }
-        }
-    };
-
-    private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                       int position, long id) {
-
-            Intent intent = new Intent(getActivity(),
-                    DeviceSettingActivity.class);
-            Light light = adapter.getItem(position);
-
-            intent.putExtra("meshAddress", light.meshAddress);
-            startActivity(intent);
-            return true;
-        }
-    };
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.mContext = this.getActivity();
-        this.adapter = new DeviceListAdapter();
-        mIntervalHandler = new Handler();
-        onOff = false;
-        testStarted = false;
-        testCount = 0;
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if (!hidden) {
+            this.testData();
+        }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        notifyDataSetChanged();
-    }
+    private void testData() {
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mIntervalHandler.removeCallbacksAndMessages(null);
-    }
+        Groups.getInstance().clear();
 
+        Group all = new Group();
+        all.name = "All Device";
+        all.meshAddress = 0xFFFF;
+        all.brightness = 100;
+        all.temperature = 100;
+        all.color = 0xFFFFFF;
 
-    public void addDevice(Light light) {
-        this.adapter.add(light);
-    }
+        Group living = new Group();
+        living.name = "Living Room";
+        living.meshAddress = 0x8001;
+        living.brightness = 100;
+        living.temperature = 100;
+        living.color = 0xFFFFFF;
 
-    public Light getDevice(int meshAddress) {
-        return this.adapter.get(meshAddress);
+        Group family = new Group();
+        family.name = "Family Room";
+        family.meshAddress = 0x8002;
+        family.brightness = 100;
+        family.temperature = 100;
+        family.color = 0xFFFFFF;
+
+        Group kitchen = new Group();
+        kitchen.name = "Kitchen";
+        kitchen.meshAddress = 0x8003;
+        kitchen.brightness = 100;
+        kitchen.temperature = 100;
+        kitchen.color = 0xFFFFFF;
+
+        Group bedroom = new Group();
+        bedroom.name = "Bedroom";
+        bedroom.meshAddress = 0x8004;
+        bedroom.brightness = 100;
+        bedroom.temperature = 100;
+        bedroom.color = 0xFFFFFF;
+
+        Groups.getInstance().add(all);
+        Groups.getInstance().add(living);
+        Groups.getInstance().add(family);
+        Groups.getInstance().add(kitchen);
+        Groups.getInstance().add(bedroom);
+
+        this.notifyDataSetChanged();
     }
 
     public void notifyDataSetChanged() {
-        if (this.adapter != null)
-            this.adapter.notifyDataSetChanged();
+        this.adapter.notifyDataSetChanged();
     }
 
-
-    private static void hidSoftInput(Context context, IBinder token) {
-        try {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(token, 0);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (v == btnAllOn) {
-            byte opcode = (byte) 0xD0;
-            int address = 0xFFFF;
-            byte[] params = new byte[]{0x01, 0x00, 0x00};
-            TelinkLightService.Instance().sendCommandNoResponse(opcode, address,
-                    params);
-        } else if (v == btnAllOff) {
-            byte opcode = (byte) 0xD0;
-            int address = 0xFFFF;
-            byte[] params = new byte[]{0x00, 0x00, 0x00};
-            TelinkLightService.Instance().sendCommandNoResponse(opcode, address,
-                    params);
-        } else if (v == backView) {
-            Intent intent = new Intent(mContext, AddMeshActivity.class);
-            startActivity(intent);
-
-        } else if (v == editView) {
-            Mesh mesh = TelinkLightApplication.getApp().getMesh();
-            if (TextUtils.isEmpty(mesh.factoryName) || TextUtils.isEmpty(mesh.factoryPassword)) {
-                Toast.makeText(mContext, "pls set mesh factory info!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Intent intent;
-            if (cb_scan_mode.isChecked()) {
-                intent = new Intent(mContext, DeviceMeshScanningActivity.class);
-            } else {
-                intent = new Intent(mContext, DeviceScanningActivity.class);
-            }
-            startActivity(intent);
-        } else if (v == btnOta) {
-
-//            Intent intent = new Intent(mContext, MeshOTAActivity.class);
-//            startActivity(intent);
-        } else if (v == log) {
-            startActivity(new Intent(getActivity(), LogInfoActivity.class));
-        } else if (v.getId() == R.id.userAll) {
-//            startActivity(new Intent(getActivity(), UserAllActivity.class));
-            startActivity(new Intent(getActivity(), TempTestActivity.class));
-        } else if (v == btn_start_test) {
-            if (!testStarted) {
-                startIntervalTest();
-            } else {
-                stopIntervalTest();
-            }
-        } else if (v == btn_online_status) {
-            startActivity(new Intent(getActivity(), OnlineStatusTestActivity.class));
-        }
-    }
-
-    private static class DeviceItemHolder {
-        public ImageView statusIcon;
+    private static class GroupItemHolder {
         public TextView txtName;
+        public Button btnOn;
+        public Button btnOff;
     }
 
-    final class DeviceListAdapter extends BaseAdapter {
+    final class GroupListAdapter extends BaseAdapter implements
+            OnClickListener, View.OnLongClickListener {
 
-        public DeviceListAdapter() {
+        public GroupListAdapter() {
 
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return false;
         }
 
         @Override
         public int getCount() {
-            return Lights.getInstance().size();
+            return Groups.getInstance().size();
         }
 
         @Override
-        public Light getItem(int position) {
-            return Lights.getInstance().get(position);
+        public Group getItem(int position) {
+            return Groups.getInstance().get(position);
         }
 
         @Override
@@ -364,49 +214,74 @@ public final class GroupListFragment extends Fragment implements OnClickListener
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            DeviceItemHolder holder;
+            GroupItemHolder holder;
 
             if (convertView == null) {
 
-                convertView = inflater.inflate(R.layout.device_item, null);
+                convertView = inflater.inflate(R.layout.group_item, null);
 
-                ImageView statusIcon = (ImageView) convertView
-                        .findViewById(R.id.img_icon);
                 TextView txtName = (TextView) convertView
                         .findViewById(R.id.txt_name);
+                txtName.setOnLongClickListener(this);
 
-                holder = new DeviceItemHolder();
+                Button btnOn = (Button) convertView.findViewById(R.id.btn_on);
+                btnOn.setOnClickListener(this);
 
-                holder.statusIcon = statusIcon;
+                Button btnOff = (Button) convertView.findViewById(R.id.btn_off);
+                btnOff.setOnClickListener(this);
+
+                holder = new GroupItemHolder();
+
                 holder.txtName = txtName;
+                holder.btnOn = btnOn;
+                holder.btnOff = btnOff;
 
                 convertView.setTag(holder);
+
             } else {
-                holder = (DeviceItemHolder) convertView.getTag();
+                holder = (GroupItemHolder) convertView.getTag();
             }
 
-            Light light = this.getItem(position);
+            Group group = this.getItem(position);
 
-            holder.txtName.setText(light.getLabel());
-            holder.txtName.setTextColor(getResources().getColor(light.textColor));
+            if (group != null) {
+                if (group.textColor == null)
+                    group.textColor = mContext.getResources()
+                            .getColorStateList(R.color.black);
 
-            if (light.connectionStatus == ConnectionStatus.OFFLINE) {
-                holder.statusIcon.setImageResource(R.drawable.icon_light_offline);
-            } else if (light.connectionStatus == ConnectionStatus.OFF) {
-                holder.statusIcon.setImageResource(R.drawable.icon_light_off);
-            } else if (light.connectionStatus == ConnectionStatus.ON) {
-                holder.statusIcon.setImageResource(R.drawable.icon_light_on);
+                holder.txtName.setText(group.name);
+                holder.txtName.setTextColor(group.textColor);
+                holder.txtName.setTag(group.meshAddress);
+                holder.btnOn.setTag(group.meshAddress);
+                holder.btnOff.setTag(group.meshAddress);
             }
 
             return convertView;
         }
 
-        public void add(Light light) {
-            Lights.getInstance().add(light);
+        @Override
+        public void onClick(View view) {
+
+            int clickId = view.getId();
+            int meshAddress = (int) view.getTag();
+
+            byte opcode = (byte) 0xD0;
+            int dstAddr = meshAddress;
+
+            if (clickId == R.id.btn_on) {
+                TelinkLightService.Instance().sendCommandNoResponse(opcode, dstAddr,
+                        new byte[]{0x01, 0x00, 0x00});
+
+            } else if (clickId == R.id.btn_off) {
+                TelinkLightService.Instance().sendCommandNoResponse(opcode, dstAddr,
+                        new byte[]{0x00, 0x00, 0x00});
+            }
         }
 
-        public Light get(int meshAddress) {
-            return Lights.getInstance().getByMeshAddress(meshAddress);
+        @Override
+        public boolean onLongClick(View v) {
+
+            return false;
         }
     }
 

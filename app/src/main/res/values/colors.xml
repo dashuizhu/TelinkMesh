@@ -3,7 +3,7 @@
     <!-- Theme Positive -->
     <color name="black">#000000</color>
     <color name="blue">#0000FF</color>
-    <color name="theme_positive_color">#4A87EE</color>
+    <color name="theme_positive_color">#606C88</color>
 
 
     <color name="color_checked">#42d8ec</color>
@@ -14,6 +14,9 @@
     <color name="colorPrimary">#606C88</color>
     <color name="colorPrimaryDark">#3F4C6B</color>
     <color name="colorAccent">#FF9600</color>
+
+    <color name="blue_gradint_start">#606C88</color>
+    <color name="blue_gradint_end">#3F4C6B</color>
 
     <color name="bg_activity">#F5F5F5</color>
     <color name="blue7e">#7E7E8D</color>

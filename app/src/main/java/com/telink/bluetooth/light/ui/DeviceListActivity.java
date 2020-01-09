@@ -89,7 +89,6 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
 
     private TelinkLightApplication mApplication;
 
-
     private int     connectMeshAddress;
     private Handler mHandler = new Handler() {
         @Override
@@ -99,6 +98,7 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
                 case UPDATE_LIST:
                     deviceFragment.notifyDataSetChanged();
                     break;
+                    default:
             }
         }
     };
@@ -150,7 +150,6 @@ public final class DeviceListActivity extends TelinkMeshErrorDealActivity implem
 
         }
 
-        this.mApplication.doInit();
 
         TelinkLog.d("-------------------------------------------");
         TelinkLog.d(Build.MANUFACTURER);
